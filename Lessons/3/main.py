@@ -29,9 +29,19 @@ class GameGrid:
     
     def step(self):
         new_grid = self.grid.copy()
-        for raw in self.grid():
-            for cell in raw:
-                pass
+        for row in range(Config.grid_rows):
+            for column in range(Config.grid_columns):
+                neighbors_list: list[Cell] = self.neighbors((row, column))
+                neighbors_list = [n.state for n in neighbors_list]
+                living = sum(neighbors_list)
+                if living == 3:
+                    new_grid[row][column] = Cell(True)
+                elif living == 2:
+                    new_grid[row][column] = self.grid[row][column]
+                else:
+                    new_grid[row][column] = Cell(False)
+        self.grid = new_grid
+                
             
 grid = GameGrid()
 print(grid.neighbors((9,9)), "\n ", grid.neighbors((5, 3)))
