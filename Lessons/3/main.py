@@ -16,10 +16,9 @@ while running:
             running = False
 
     screen.fill(Config.death_color)  # Заливка фона черным цветом
-    for row in range(Config.grid_rows):
-        for column in range(Config.grid_columns):
-            cell: Cell =  my_grid.grid[row][column]
-            if cell.state == True:
+    for row, cell_list in enumerate(my_grid.grid):
+        for column, cell in enumerate(cell_list):
+            if cell.state:
                 pygame.draw.rect(screen, 
                                  Config.live_color, 
                                  (column * Config.scale,
@@ -28,7 +27,6 @@ while running:
                                   Config.scale))  # Отрисовка красного квадрата
     pygame.display.flip()  # Обновление экрана
     my_grid.step()
-
-    clock.tick(Config.FPS)  # Ограничение до 60 FPS
+    clock.tick(Config.FPS)
 
 pygame.quit()
