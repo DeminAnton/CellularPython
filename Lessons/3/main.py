@@ -14,42 +14,24 @@ class GameGrid:
     def neighbors(self, coordinates: tuple) -> list:
         neighbors_list = []
         row, column = coordinates
-        if (row == 0) and (column == 0):
-            pass # угловая
-        elif (row == 0) and (column == Config.grid_columns - 1):
-            pass # угловая
-        
-        elif ((row == Config.grid_rows - 1) and 
-             (column == Config.grid_columns - 1)):
-            pass
-        
-        elif ((row == Config.grid_rows - 1) and 
-             (column == 0)):
-            pass
-        
-        if (row == 0):
-            pass
-        elif (row == Config.grid_rows - 1):
-            pass
-        elif (column == 0):
-            pass
-        elif (column == Config.grid_columns - 1):
-            pass
-        
-        neighbors_list.append(self.grid[row - 1][column - 1])
-        neighbors_list.append(self.grid[row][column - 1])
-        neighbors_list.append(self.grid[row + 1][column - 1])
-        neighbors_list.append(self.grid[row - 1][column])
-        neighbors_list.append(self.grid[row + 1][column])
-        neighbors_list.append(self.grid[row - 1][column + 1])
-        neighbors_list.append(self.grid[row][column + 1])
-        neighbors_list.append(self.grid[row + 1][column + 1])
-        
-        
+        neighbors_coords_row = [row + i for i in range(-1, 2)]
+        neighbors_coords_colomns = [column + i for i in range(-1, 2)]
+        neighbors_coords = []
+        for nrow in neighbors_coords_row:
+            for ncolumn in neighbors_coords_colomns:
+                if ((nrow >= 0 and nrow < Config.grid_rows) and
+                    (ncolumn >= 0 and ncolumn < Config.grid_columns) and
+                    (column != ncolumn or row != nrow)):
+                    neighbors_coords.append((nrow,ncolumn))
+        neighbors_list = [self.grid[i[0]][i[1]] for i in neighbors_coords]
+        return neighbors_list
         
     
     def step(self):
         new_grid = self.grid.copy()
         for raw in self.grid():
             for cell in raw:
-                
+                pass
+            
+grid = GameGrid()
+print(grid.neighbors((9,9)), "\n ", grid.neighbors((5, 3)))
