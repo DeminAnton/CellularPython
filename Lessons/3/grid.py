@@ -7,9 +7,9 @@ class Cell:
         
         
 class GameGrid:
-    def __init__(self, grid = list | None) -> None:
+    def __init__(self, grid: list | None = None) -> None:
         if grid is None:
-            self.grid = [[Cell(choice((False, True))) for column in range(
+            self.grid = [[Cell(choice((False, False, True))) for column in range(
                       Config.grid_columns)]
                       for row in range(Config.grid_rows)]
         else:
