@@ -14,7 +14,8 @@ class GameGrid:
     def __init__(self, grid: list | None = None) -> None:
         if grid is None:
             self.grid = [[Cell(choices((False, True),
-                                       (1- Config.init_prob, Config.init_prob))[0], 
+                                       (1- Config.init_prob,
+                                        Config.init_prob))[0], 
                                (row, column)) 
                           for column in range(Config.grid_columns)]
                           for row in range(Config.grid_rows)]
@@ -36,7 +37,7 @@ class GameGrid:
         neighbors: list[Cell] = self.neighbors(cell, 1)
         neighbors_state = [n.state for n in neighbors]
         living = sum(neighbors_state)
-        if living == 3 :
+        if living == 3:
             return Cell(True, (cell.row, cell.column)) 
         elif living == 2:
             return Cell(cell.state, (cell.row, cell.column))
