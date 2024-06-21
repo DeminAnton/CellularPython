@@ -34,7 +34,7 @@ class GameGrid:
         return neighbors_list
     
     def rules(self, cell):
-        neighbors: list[Cell] = self.neighbors(cell, 1)
+        neighbors: list[Cell] = self.neighbors(cell, 2)
         neighbors_state = [n.state for n in neighbors]
         living = sum(neighbors_state)
         if living == 3:
