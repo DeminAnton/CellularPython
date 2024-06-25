@@ -1,5 +1,5 @@
 from config import Config
-from random import choice, choices
+from random import choice, choices, random
 
 class Cell:
     def __init__(self, state = None, coords=(0,0)):
@@ -18,8 +18,8 @@ class GameGrid:
         if grid is None:
             self.grid = [[Cell(choices((0, 1, 2),
                                        (1 - Config.init_prob,
-                                        Config.init_prob / 2, 
-                                        Config.init_prob / 2))[0], 
+                                        Config.init_prob / 6 * 4, 
+                                        Config.init_prob / 6 * 2))[0], 
                                        (row, column)) 
                           for column in range(Config.grid_columns)]
                           for row in range(Config.grid_rows)]
@@ -40,13 +40,16 @@ class GameGrid:
     def rules(self, cell: Cell):
         neighbors: list[Cell] = self.neighbors(cell, 1)
         neighbors_state = [n.state for n in neighbors]
+        if (random() < Config.grow_prob) and cell.state == 0:
+            Cell(1, (cell.row, cell.column))
+            
         state_1 = neighbors_state.count(1)
         state_2 = neighbors_state.count(2)
-        if (2 <= state_2 <= 4) and (state_1 >= 1 or cell.state == 1):
+        if (2 <= state_2 <= 2) and (2 >= state_1 >= 1 or cell.state == 1):
             return Cell(2, (cell.row, cell.column))
-        elif ((state_2 == 2 or state_2 == 5) or (state_2 == 1 and state_1 >= 1)) and cell.state == 1:
+        elif (state_2 == 3 or state_2 == 4) or (state_2 > 0) and cell.state == 1:
             return Cell(cell.state, (cell.row, cell.column))
-        elif cell.state == 1:
+        elif cell.state == 1 and (1 <= state_1 <= 3 or state_2 > 4) :
             
             direction = choice((0, 1, 2, 3))
             
@@ -63,7 +66,7 @@ class GameGrid:
                 if (self.grid[cell.row][cell.column + 1].state == 0):
                     return Cell(1, (cell.row, cell.column + 1))
                 
-        if state_1 + state_2 > 6 or state_2 > 4:
+        if state_1 + state_2 > 6:
             return Cell(0, (cell.row, cell.column))
         
         if cell.state == 1:
