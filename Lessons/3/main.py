@@ -19,12 +19,16 @@ while running:
     for row, cell_list in enumerate(my_grid.grid):
         for column, cell in enumerate(cell_list):
             if cell.state:
-                pygame.draw.rect(screen, 
-                                 Config.live_color, 
-                                 (column * Config.scale,
-                                  row * Config.scale,
-                                  Config.scale,
-                                  Config.scale))  # Отрисовка красного квадрата
+                pygame.draw.rect(
+                    screen,
+                    Config.live_color,
+                    (
+                        column * Config.scale,
+                        row * Config.scale,
+                        Config.scale,
+                        Config.scale,
+                    ),
+                )  # Отрисовка красного квадрата
     pygame.display.flip()  # Обновление экрана
     my_grid.step()
     clock.tick(Config.FPS)

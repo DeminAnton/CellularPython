@@ -1,41 +1,40 @@
 import random
 
-grid_len:int = 300
+grid_len: int = 300
 
-class Cell():
+
+class Cell:
     def __init__(self, state: bool, position) -> None:
-        self.state:bool = state
-        self.position:int = position
-        
+        self.state: bool = state
+        self.position: int = position
+
     def __repr__(self) -> str:
         return f"state: {self.state}, pos: {self.position}"
 
-class GameGrid():
-    def __init__(self, grid: list|None = None) -> None:
+
+class GameGrid:
+    def __init__(self, grid: list | None = None) -> None:
         if grid is None:
             grid = random.choices((True, False), k=grid_len)
         self.grid = [Cell(state, pos) for pos, state in enumerate(grid)]
 
-            
-            
     def neighbors(self, cell: Cell) -> str:
         if cell.position == 0:
-            left = '0'
-            center = '1' if cell.state else '0'
-            right = '1' if self.grid[1].state else '0'
+            left = "0"
+            center = "1" if cell.state else "0"
+            right = "1" if self.grid[1].state else "0"
             return left + center + right
         elif cell.position == grid_len - 1:
-            left = '1' if self.grid[-2].state else '0'
-            center = '1' if cell.state else '0'
-            right = '0'
+            left = "1" if self.grid[-2].state else "0"
+            center = "1" if cell.state else "0"
+            right = "0"
             return left + center + right
-        
-        left = '1' if self.grid[cell.position - 1].state else '0'
-        center = '1' if cell.state else '0'
-        right = '1' if self.grid[cell.position + 1].state else '0'
+
+        left = "1" if self.grid[cell.position - 1].state else "0"
+        center = "1" if cell.state else "0"
+        right = "1" if self.grid[cell.position + 1].state else "0"
         return left + center + right
-        
-    
+
     def rule(self, cell: Cell) -> bool:
         key = self.neighbors(cell)
         rule_dict = {
@@ -46,10 +45,10 @@ class GameGrid():
             "100": 1,
             "101": 1,
             "110": 0,
-            "111": 0
+            "111": 0,
         }
         return bool(rule_dict[key])
-    
+
     def step(self) -> list:
         new_grid = list()
         for cell in self.grid:
@@ -57,8 +56,6 @@ class GameGrid():
             new_grid.append(new_cell)
         self.grid = new_grid
         return new_grid
-    
-
 
 
 import pygame
@@ -80,15 +77,11 @@ for count in range(y_res):
         if event.type == pygame.QUIT:
             running = False
 
-   
     for cell in my_grid.grid:
         if cell.state:
-            pygame.draw.rect(screen, 
-                             (0,0,0), 
-                            (cell.position * size,
-                             count * size,                            
-                             size,
-                             size))  # Отрисовка красного квадрата
+            pygame.draw.rect(
+                screen, (0, 0, 0), (cell.position * size, count * size, size, size)
+            )  # Отрисовка красного квадрата
     pygame.display.flip()  # Обновление экрана
     my_grid.step()
     clock.tick(10)
