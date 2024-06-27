@@ -1,0 +1,134 @@
+import random
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from grid import Grid
+    
+
+class Agent():
+    def __init__(self, coords:tuple, energy) -> None:
+        self.row, self.col = coords
+        self.energy = energy
+    
+    def add_energy(self, energy = 1):
+        self.energy += energy
+        
+    def sub_energy(self, energy = 1):
+        self.energy -= energy
+    
+    def is_live(self):
+        return True if self.energy > 0 else False
+    
+    def step(self):
+        return self
+    
+class Poison(Agent):
+    def __init__(self, coords: tuple, energy) -> None:
+        super().__init__(coords, energy)
+        
+    def step(self):
+        self.sub_energy()
+        return self
+        
+class Plant(Agent):
+    def __init__(self, coords: tuple, energy) -> None:
+        super().__init__(coords, energy)
+    
+    def step(self):
+        self.add_energy()
+        return self
+        
+class Bacteria(Agent):
+    def __init__(self, coords: tuple, energy, direction, gen: list|None) -> None:
+        super().__init__(coords, energy)
+        self.direction = direction
+        self.past = {"neighbors": None,
+                     "direction": None}
+        if gen is None:
+            gen = []
+            for _ in range(9):
+                gen.append([random.randint(-10, 10) for _ in range(17)])
+        
+        self.gen = gen
+        
+    def _dot_mul(self, a:list[int], b:list[int]) -> int:
+        result = sum(map(lambda x: x[0] * x[1], zip(a, b)))
+        return result
+    
+    
+    def _mat_mul(self, A:list[list[int]], b:list[int]) -> list[int]:
+        result = []
+        for vec in A:
+            result.append(self._dot_mul(vec, b))
+            
+        return result
+        
+    def change_direction(self, direction):
+        self.direction = direction
+        
+    def choise_direction(self):
+        pass
+    
+    def move(self):
+        if self.direction == 0:
+            self.row -= 1
+            self.col -= 1
+        elif self.direction == 1:
+            self.row -= 1
+        elif self.direction == 2:
+            self.row -= 1
+            self.col += 1
+        elif self.direction == 3:
+            self.col += 1
+        elif self.direction == 4:
+            self.col += 1
+            self.row += 1
+        elif self.direction == 5:
+            self.row += 1
+        elif self.direction == 6:
+            self.col -= 1
+            self.row += 1
+        elif self.direction == 7:
+            self.col -= 1
+        
+        self.sub_energy()
+        return (self.row, self.col)
+    
+    def vision(self, grid) -> list[Agent|None]:
+        neighbors_list = []
+        max_row = grid.rows
+        max_col = grid.cols
+        for nrow in range(-1, 2, 1):
+            for ncolumn in range(-1, 2, 1):
+                if (nrow + self.row < 0 or 
+                    nrow + self.row >= max_row or
+                    ncolumn + self.row < 0 or
+                    ncolumn + self.row >= max_col):
+                
+                    neighbors_list.append(None)
+                else:
+                    neighbors_list.append(self.grid[nrow][ncolumn])
+        return neighbors_list
+    
+    def arg_max(self, vec:list):
+        mx = max(vec)
+        return vec.index(mx)
+    
+    def decision(self, grid):
+        features = self.vision(grid=grid)
+        features.extend(self.past["neighbors"])
+        features = [agent.energy if agent is not None else None for agent in features]
+        features.append(self.past["direction"])
+        des_vec = self._mat_mul(self.gen, features)
+        return self.arg_max(des_vec)
+    
+    def step(self, grid):
+        current_decision = self.decision(grid)
+        if current_decision < 8:
+            self.move(current_decision)
+            return self
+        return self
+            
+class EmptyAgent(Agent):
+    def __init__(self, coords: tuple, energy) -> None:
+        super().__init__(coords, energy)

@@ -7,7 +7,6 @@ class Config:
     scale = 4
     x_res = grid_columns * scale
     y_res = grid_rows * scale
-    live_color = (0, 0, 0)
-    death_color = (255, 255, 255)
-    FPS = 50
-    init_prob = 0.1
+    poison_energy = 10
+    bacteria_energy = 5
+    probs = [1 - 0.11, 0.05, 0.05, 0.01]
