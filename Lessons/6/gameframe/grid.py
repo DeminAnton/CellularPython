@@ -29,7 +29,7 @@ class Grid:
         for a in list_of_agents:
             if isinstance(a, agent.Bacteria):
                 list_of_bacterias.append(a)
-
+                
         if len(list_of_bacterias) > 0:
             the_most_fat_bacteria = max(list_of_bacterias, key=lambda x: x.energy)
         else:
@@ -45,7 +45,6 @@ class Grid:
         else:
             poison = None
         empty = [p for p in list_of_agents if isinstance(p, agent.EmptyAgent)][0]
-
         if the_most_fat_bacteria is None and plant is None and poison is None:
             return empty
         if the_most_fat_bacteria is None:
@@ -82,7 +81,12 @@ class Grid:
 
         for row in self.grid:
             for a in row:
-                new_agent = a.step()
+                q =  isinstance(a, agent.Bacteria)
+                if q:
+                    print("add_before", a)
+                new_agent = a.step(grid=self.grid)
+                if q:
+                    print("add", new_agent)
                 intraction_grid[new_agent.row][new_agent.col].append(new_agent)
 
         self.grid = [
@@ -92,5 +96,15 @@ class Grid:
 
 
 grid = Grid()
-bacteria = agent.Bacteria((0, 0), 0)
-print(bacteria.vision(grid))
+for row in grid.grid:
+    for cell in row:
+        if isinstance(cell, agent.Bacteria):
+            print(cell)
+grid.step()
+print("new step \n\n")
+for row in grid.grid:
+    for cell in row:
+        if isinstance(cell, agent.Bacteria):
+            print(cell)
+
+

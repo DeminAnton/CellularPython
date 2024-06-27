@@ -20,8 +20,8 @@ class Agent:
     def is_live(self):
         return True if self.energy > 0 else False
 
-    def step(self):
-        return
+    def step(self, grid = None):
+        return self
 
     def __str__(self) -> str:
         return f"T = {self.__class__}{self.row, self.col}, E = {self.energy}"
@@ -34,7 +34,7 @@ class Poison(Agent):
     def __init__(self, coords: tuple, energy) -> None:
         super().__init__(coords, energy)
 
-    def step(self):
+    def step(self, grid = None):
         self.sub_energy()
         return self
 
@@ -43,7 +43,7 @@ class Plant(Agent):
     def __init__(self, coords: tuple, energy) -> None:
         super().__init__(coords, energy)
 
-    def step(self):
+    def step(self, grid = None):
         self.add_energy()
         return self
 
@@ -106,8 +106,8 @@ class Bacteria(Agent):
 
     def vision(self, grid) -> list[Agent | None]:
         neighbors_list = []
-        max_row = grid.rows
-        max_col = grid.cols
+        max_row = Config.grid_rows
+        max_col = Config.grid_columns
         for nrow in range(-1, 2, 1):
             for ncolumn in range(-1, 2, 1):
                 if (nrow == 0) and (ncolumn == 0):
@@ -121,7 +121,7 @@ class Bacteria(Agent):
 
                     neighbors_list.append(Border((nrow, ncolumn)))
                 else:
-                    neighbors_list.append(grid.grid[nrow][ncolumn])
+                    neighbors_list.append(grid[nrow][ncolumn])
         return neighbors_list
 
     def arg_max(self, vec: list):
@@ -130,8 +130,8 @@ class Bacteria(Agent):
 
     def decision(self, grid):
         features = self.vision(grid=grid)
-        features.extend(self.past["neighbors"])
         features = [agent.energy for agent in features]
+        features.extend(self.past["neighbors"])
         features.append(self.past["direction"])
         des_vec = self._mat_mul(self.gen, features)
         return self.arg_max(des_vec)
@@ -140,15 +140,17 @@ class Bacteria(Agent):
         current_decision = self.decision(grid)
         self.past["direction"] = current_decision
         self.past["neighbors"] = [a.energy for a in self.vision(grid=grid)]
+        self.direction = current_decision
         if current_decision < 8:
-            self.move(current_decision)
+            self.move()
             if (
                 self.col < 0
                 or self.col >= Config.grid_columns
                 or self.row < 0
-                or self.col >= Config.grid_rows
+                or self.row >= Config.grid_rows
             ):
                 return EmptyAgent((0, 0))
+
         return self
 
 
