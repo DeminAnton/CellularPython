@@ -18,16 +18,27 @@ class Grid():
         return random.choices(agent_types, Config.probs)[0]
         
     
-    def interaction(list_of_agents:list[agent.Agent]):
+    def interaction(self, list_of_agents:list[agent.Agent]):
         list_of_bacterias:list[agent.Bacteria] = []
         for a in list_of_agents:
             if isinstance(a, agent.Bacteria):
                 list_of_bacterias.append(a)
-        
-        the_most_fat_bacteria = max(list_of_bacterias, key=lambda x: x.energy)
-        plant = [p for p in list_of_agents if isinstance(p, agent.Plant)][0]
-        poison = [p for p in list_of_agents if isinstance(p, agent.Poison)][0]
-        empty = [p for p in list_of_agents if isinstance(p, agent.EmptyAgent)][0]
+                
+        if len(list_of_bacterias) > 0:
+            the_most_fat_bacteria = max(list_of_bacterias, key=lambda x: x.energy)
+        else:
+            the_most_fat_bacteria = None
+        plant = [p for p in list_of_agents if isinstance(p, agent.Plant)]
+        if len(plant) > 0:
+            plant = plant[0]
+        else:
+            plant = None
+        poison = [p for p in list_of_agents if isinstance(p, agent.Poison)]
+        if len(poison) > 0:
+            poison = poison[0]
+        else:
+            poison = None
+        empty = [p for p in list_of_agents if isinstance(p, agent.EmptyAgent)]
         
         if the_most_fat_bacteria is None and plant is None and poison is None:
             return empty
@@ -67,7 +78,6 @@ class Grid():
         
         
 grid = Grid()        
-list_of_agents = [agent.EmptyAgent((0, 0)), 
-                  agent.Poison((0,0), energy = 6),
-                  agent.Bacteria((0,0), energy = 4),
-                  agent.Bacteria((0,0), energy = 8)]
+list_of_agents = [agent.EmptyAgent((0, 0))]
+result = grid.interaction(list_of_agents)
+print(result)

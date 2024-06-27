@@ -20,7 +20,13 @@ class Agent():
         return True if self.energy > 0 else False
     
     def step(self):
-        return self
+        return 
+    
+    def __str__(self) -> str:
+        return f"T = {self.__class__}, E = {self.energy}"
+    
+    def __repr__(self) -> str:
+        return f"T = {self.__class__}, E = {self.energy}"
     
 class Poison(Agent):
     def __init__(self, coords: tuple, energy) -> None:
@@ -39,7 +45,7 @@ class Plant(Agent):
         return self
         
 class Bacteria(Agent):
-    def __init__(self, coords: tuple, energy, direction, gen: list|None) -> None:
+    def __init__(self, coords: tuple, energy, direction = 8, gen: list|None = None) -> None:
         super().__init__(coords, energy)
         self.direction = direction
         self.past = {"neighbors": None,
