@@ -130,5 +130,5 @@ class Bacteria(Agent):
         return self
             
 class EmptyAgent(Agent):
-    def __init__(self, coords: tuple, energy) -> None:
+    def __init__(self, coords: tuple, energy=0) -> None:
         super().__init__(coords, energy)

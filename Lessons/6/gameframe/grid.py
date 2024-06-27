@@ -19,17 +19,40 @@ class Grid():
         
     
     def interaction(list_of_agents:list[agent.Agent]):
-        if len(list_of_agents) == 0:
-            return None
-        
         list_of_bacterias:list[agent.Bacteria] = []
         for a in list_of_agents:
             if isinstance(a, agent.Bacteria):
-                pass
+                list_of_bacterias.append(a)
         
-             
-        list_of_bacterias = sorted(list_of_bacterias, key=lambda x: x.energy)
-                
+        the_most_fat_bacteria = max(list_of_bacterias, key=lambda x: x.energy)
+        plant = [p for p in list_of_agents if isinstance(p, agent.Plant)][0]
+        poison = [p for p in list_of_agents if isinstance(p, agent.Poison)][0]
+        empty = [p for p in list_of_agents if isinstance(p, agent.EmptyAgent)][0]
+        
+        if the_most_fat_bacteria is None and plant is None and poison is None:
+            return empty
+        if  the_most_fat_bacteria is None:
+            if plant is not None:
+                return plant
+            elif poison is not None:
+                if poison.energy > 0:
+                    return poison
+                else:
+                    return empty
+        else:
+            if plant is not None:
+                the_most_fat_bacteria.add_energy(plant.energy)
+                return the_most_fat_bacteria
+            elif poison is not None:
+                the_most_fat_bacteria.sub_energy(poison.energy)
+                if the_most_fat_bacteria.energy > 0:
+                    return the_most_fat_bacteria
+                else:
+                    return empty
+            else:
+                if the_most_fat_bacteria.energy > 0:
+                    return the_most_fat_bacteria
+        return empty
         
     def step(self):
         intraction_grid = [[[agent.EmptyAgent((row, column), 0)]
@@ -43,5 +66,8 @@ class Grid():
         
         
         
-        
-        
+grid = Grid()        
+list_of_agents = [agent.EmptyAgent((0, 0)), 
+                  agent.Poison((0,0), energy = 6),
+                  agent.Bacteria((0,0), energy = 4),
+                  agent.Bacteria((0,0), energy = 8)]
