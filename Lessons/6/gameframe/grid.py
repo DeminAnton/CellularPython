@@ -38,7 +38,7 @@ class Grid():
             poison = poison[0]
         else:
             poison = None
-        empty = [p for p in list_of_agents if isinstance(p, agent.EmptyAgent)]
+        empty = [p for p in list_of_agents if isinstance(p, agent.EmptyAgent)][0]
         
         if the_most_fat_bacteria is None and plant is None and poison is None:
             return empty
