@@ -1,6 +1,6 @@
 import random
-from config import Config
-import agent
+from .config import Config
+from . import agent
 
 
 class Grid:
@@ -81,30 +81,11 @@ class Grid:
 
         for row in self.grid:
             for a in row:
-                q =  isinstance(a, agent.Bacteria)
-                if q:
-                    print("add_before", a)
                 new_agent = a.step(grid=self.grid)
-                if q:
-                    print("add", new_agent)
                 intraction_grid[new_agent.row][new_agent.col].append(new_agent)
 
         self.grid = [
             [self.interaction(cell) for cell in row] for row in intraction_grid
         ]
         return self.grid
-
-
-grid = Grid()
-for row in grid.grid:
-    for cell in row:
-        if isinstance(cell, agent.Bacteria):
-            print(cell)
-grid.step()
-print("new step \n\n")
-for row in grid.grid:
-    for cell in row:
-        if isinstance(cell, agent.Bacteria):
-            print(cell)
-
 

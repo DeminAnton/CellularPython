@@ -8,6 +8,13 @@ class Config:
     scale = 4
     x_res = grid_columns * scale
     y_res = grid_rows * scale
-    poison_energy = 10
-    bacteria_energy = 5
-    probs = [1 - 0.11, 0.5, 0.5, 0.01]
+    poison_energy = 15
+    bacteria_energy = 25
+    probs = [1 - 0.12, 0.05, 0.05, 0.02]
+    colors = {
+        "empty":(255,255,255),
+        "poison":(255, 0, 0),
+        "plant":(0, 255, 0),
+        "bacteria":(0, 0, 255)
+    }
+    FPS = 1

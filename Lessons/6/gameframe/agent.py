@@ -1,6 +1,6 @@
 import random
 from typing import TYPE_CHECKING
-from config import Config
+from .config import Config
 
 if TYPE_CHECKING:
     from grid import Grid
@@ -31,7 +31,7 @@ class Agent:
 
 
 class Poison(Agent):
-    def __init__(self, coords: tuple, energy) -> None:
+    def __init__(self, coords: tuple, energy = Config.poison_energy) -> None:
         super().__init__(coords, energy)
 
     def step(self, grid = None):
@@ -50,7 +50,7 @@ class Plant(Agent):
 
 class Bacteria(Agent):
     def __init__(
-        self, coords: tuple, energy, direction=8, gen: list | None = None
+        self, coords: tuple, energy=Config.bacteria_energy, direction=8, gen: list | None = None
     ) -> None:
         super().__init__(coords, energy)
         self.direction = direction
@@ -141,6 +141,7 @@ class Bacteria(Agent):
         self.past["direction"] = current_decision
         self.past["neighbors"] = [a.energy for a in self.vision(grid=grid)]
         self.direction = current_decision
+        self.sub_energy()
         if current_decision < 8:
             self.move()
             if (
