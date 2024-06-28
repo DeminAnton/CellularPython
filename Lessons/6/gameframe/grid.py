@@ -4,23 +4,25 @@ from . import agent
 
 
 class Grid:
-    def __init__(self) -> None:
+    def __init__(self, gens = None) -> None:
         self.rows = Config.grid_rows
         self.cols = Config.grid_columns
         self.grid: list[list[agent.Agent]] = [
             [
-                self._generate_type_of_agent((row, column))
+                self._generate_type_of_agent((row, column), gens)
                 for column in range(Config.grid_columns)
             ]
             for row in range(Config.grid_rows)
         ]
 
-    def _generate_type_of_agent(self, coords):
+    def _generate_type_of_agent(self, coords, gens):
         agent_types = [
             agent.EmptyAgent(coords, 0),
             agent.Poison(coords, Config.poison_energy),
             agent.Plant(coords, 1),
-            agent.Bacteria(coords, Config.bacteria_energy),
+            agent.Bacteria(coords, 
+                           Config.bacteria_energy, 
+                           gen=random.choice(gens) if gens is not None else None)
         ]
         return random.choices(agent_types, Config.probs)[0]
 
@@ -92,7 +94,15 @@ class Grid:
                 if isinstance(cell, agent.EmptyAgent):
                     if (random.random() < Config.probs[1]):
                         self.grid[row_idx][col_idx] = agent.Poison((cell.row, cell.col))
-                        if (random.random() < 0.5):
+                        if (random.random() < 0.1):
                             self.grid[row_idx][col_idx] = agent.Plant((cell.row, cell.col), energy=5)
         return self.grid
 
+
+    def count_bacterias(self):
+        count = 0
+        for row in self.grid:
+            for cell in row:
+                if isinstance(cell, agent.Bacteria):
+                    count += 1
+        return count

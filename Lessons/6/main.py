@@ -2,6 +2,13 @@ from gameframe import Grid, Config, Plant, Poison, Bacteria
 
 import pygame
 
+
+def create_new_grid():
+    pass
+
+
+
+
 pygame.init()
 screen = pygame.display.set_mode((Config.x_res, Config.y_res))
 pygame.display.set_caption("Bactria wars")
@@ -9,6 +16,7 @@ clock = pygame.time.Clock()
 
 my_grid = Grid()
 running = True
+steps = 0
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -39,5 +47,10 @@ while running:
     pygame.display.flip()  # Обновление экрана
     my_grid.step()
     clock.tick(Config.FPS)
+    steps += 1
+    if steps > 200:
+        running = False
+    if my_grid.count_bacterias() <= 50:
+        running = False
 
 pygame.quit()
