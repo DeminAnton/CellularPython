@@ -87,5 +87,12 @@ class Grid:
         self.grid = [
             [self.interaction(cell) for cell in row] for row in intraction_grid
         ]
+        for row_idx, row in enumerate(self.grid):
+            for col_idx, cell in enumerate(row):
+                if isinstance(cell, agent.EmptyAgent):
+                    if (random.random() < Config.probs[1]):
+                        self.grid[row_idx][col_idx] = agent.Poison((cell.row, cell.col))
+                    if (random.random() < Config.probs[1]):
+                        self.grid[row_idx][col_idx] = agent.Plant((cell.row, cell.col), energy=5)
         return self.grid
 

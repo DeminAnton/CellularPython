@@ -10,7 +10,7 @@ class Config:
     y_res = grid_rows * scale
     poison_energy = 15
     bacteria_energy = 25
-    probs = [1 - 0.12, 0.05, 0.05, 0.02]
+    probs = [1 - 0.8, 0.01, 0.05, 0.02]
     colors = {
         "empty":(255,255,255),
         "poison":(255, 0, 0),
