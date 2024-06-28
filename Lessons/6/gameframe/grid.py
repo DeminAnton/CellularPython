@@ -92,7 +92,7 @@ class Grid:
                 if isinstance(cell, agent.EmptyAgent):
                     if (random.random() < Config.probs[1]):
                         self.grid[row_idx][col_idx] = agent.Poison((cell.row, cell.col))
-                    if (random.random() < Config.probs[1]):
-                        self.grid[row_idx][col_idx] = agent.Plant((cell.row, cell.col), energy=5)
+                        if (random.random() < 0.5):
+                            self.grid[row_idx][col_idx] = agent.Plant((cell.row, cell.col), energy=5)
         return self.grid
 
