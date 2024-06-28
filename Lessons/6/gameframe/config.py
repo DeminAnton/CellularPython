@@ -3,9 +3,9 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
-    grid_rows = 180
-    grid_columns = 260
-    scale = 4
+    grid_rows = 150
+    grid_columns = 300
+    scale = 6
     x_res = grid_columns * scale
     y_res = grid_rows * scale
     poison_energy = 15
@@ -17,4 +17,4 @@ class Config:
         "plant":(0, 255, 0),
         "bacteria":(0, 0, 255)
     }
-    FPS = 1
+    FPS = 10

@@ -1,10 +1,19 @@
 from gameframe import Grid, Config, Plant, Poison, Bacteria
-
+import gen_alg
 import pygame
 
 
-def create_new_grid():
-    pass
+def create_new_grid(grid: Grid):
+    bacteria_list = []
+    for row in grid.grid:
+        for cell in row:
+            if isinstance(cell, Bacteria):
+                bacteria_list.append(cell)
+    
+    new_population:list[Bacteria] = gen_alg.remake(bacteria_list)
+    gens = [cell.gen for cell in new_population]
+    new_grid = Grid(gens=gens)
+    return new_grid
 
 
 
@@ -48,9 +57,8 @@ while running:
     my_grid.step()
     clock.tick(Config.FPS)
     steps += 1
-    if steps > 200:
-        running = False
-    if my_grid.count_bacterias() <= 50:
-        running = False
+    if steps > 500 or my_grid.count_bacterias() <= 50:
+        steps = 0
+        my_grid = create_new_grid(my_grid)
 
 pygame.quit()

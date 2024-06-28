@@ -43,8 +43,7 @@ def breeding(ind_1: Bacteria, ind_2:Bacteria):
     return Bacteria((0,0), gen=mut_child_gen)
 
 
-def remake(population):
-    size = len(population)
+def remake(population, size=100):
     new_population = []
     for _ in range(size):
         ind_1 = selection(population)
